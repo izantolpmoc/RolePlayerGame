@@ -9,7 +9,6 @@ public class BareHands extends Weapon {
         super(DAMAGE + bonus, PRICE, NAME);
     }
    
-
     private static final double DAMAGE = 10;
     private static final double PRICE = 0;
     private static final String NAME = "Poings";

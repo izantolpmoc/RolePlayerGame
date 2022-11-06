@@ -85,15 +85,19 @@ public class Map extends Item {
             System.out.println(Arrays.toString(row));
         }
         
+        //defines all the events the player can be confronted to and the actions he can perform in reaction
         public void Action(Player player)
         {
             Scanner in = new Scanner(System.in);
             
             switch(playerPos) {
+                //Big reward
                 case 0:
                     System.out.println(ConsoleColors.YELLOW_BACKGROUND_BRIGHT + "Vous repérez un objet brillant sous un banc. Vous vous rapprochez. UNE ROLEX ! Sans aucune hésitation, vous ramassez le butin et le revendez dans une petite boutique pour la coquette somme de 7800€." + ConsoleColors.RESET);
                     player.ReceiveMoney(7800);
                 break;
+                
+                //Hostile environment
                 case 1:
                     System.out.println(ConsoleColors.RED + "Vous marchez sur un trottoir 'miné'. Une forte dextérité peut vous aider à esquiver les crottes de chien." + ConsoleColors.RESET);
                     slowPrint("Votre dextérité: " + player.Dexterity);
@@ -105,6 +109,8 @@ public class Map extends Item {
                         player.TakeDamage(5, DamageType.POISON);
                     }
                 break;
+                
+                //Trash (obstacle)
                 case 2:
                     System.out.println(ConsoleColors.RED + "Une tonne d'encombrants vous bloque la route." + ConsoleColors.RESET);
                     var trash = new Trash();
@@ -136,6 +142,8 @@ public class Map extends Item {
                         break;
                     }
                 break;
+                
+                //Prostitute (monster)
                 case 3:
                     var prostitute = new Prostitute();
                     System.out.println(ConsoleColors.RED + "Une drôle de femme vous aborde en sortant d'une camionette, elle vous réclame de l'argent contre un service sexuel que vous n'avez pas demandé." + ConsoleColors.RESET);
@@ -160,6 +168,8 @@ public class Map extends Item {
                         break;
                     }
                 break;
+                
+                //StreetSeller (shop/monster)
                 case 4:
                     System.out.println(ConsoleColors.PURPLE_BOLD + "MALBORO, MALBORO, MARRONS CHAUDS, MARRONS CHAUDS, 1 EURO, 1 EUROOOO. Un groupe de vendeurs à la sauvette sont prêts à marchander avec vous." + ConsoleColors.RESET);
                     var sellerInventory = new ArrayList<Item>();
@@ -192,27 +202,26 @@ public class Map extends Item {
                                 move(Direction.RIGHT, player);
                             else
                             {
-                                System.out.println(ConsoleColors.RED + "Les vendeurs ne laissent pas partir si facilement. Vous allez devoir vous battre." + ConsoleColors.RESET);
+                                System.out.println(ConsoleColors.RED + "Les vendeurs ne vous laissent pas partir si facilement. Vous allez devoir vous battre." + ConsoleColors.RESET);
                                 fight(player, new AngrySeller());
                                 if(player.HealthPoints > 0) player.ReceiveMoney(10);
                             }
                         break;
                     }
-                    
-
                 break;
+                
+                //Hostile environment
                 case 5:
-                    System.out.println(ConsoleColors.RED + "Vous marchez sur un trottoir 'miné'. Une forte dextérité peut vous aider à esquiver les crottes de chien." + ConsoleColors.RESET);
+                    System.out.println(ConsoleColors.RED + "Une nuée de pigeons vous survole. Une forte dextérité peut vous aider à esquiver leurs fientes." + ConsoleColors.RESET);
                     slowPrint("Votre dextérité: " + player.Dexterity);
                     if(player.Dexterity > 5)
                         slowPrint("Vous arrivez à avancer sans soucis.");
                     else
                     {
-                        slowPrint("Vous marchez sur une crotte");
+                        slowPrint("Vous recevez une fiente sur votre visage.");
                         player.TakeDamage(5, DamageType.POISON);
                     }
-                break;
-                    
+                break; 
             }
         }
 
@@ -240,11 +249,15 @@ public class Map extends Item {
             player.gainXP(10);
         }
         
+        //The fight goes on until one of them dies.
         private void fight(Player player, Monster monster) {
             while(monster.HealthPoints > 0 && player.HealthPoints > 0) 
             {
-                player.attack(monster);
-                monster.Attack(player);
+                if(player.HealthPoints > 0) 
+                    player.attack(monster);
+                
+                if(monster.HealthPoints > 0)
+                    monster.Attack(player);
             }
             
             player.gainXP(25);

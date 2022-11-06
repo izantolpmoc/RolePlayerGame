@@ -7,7 +7,7 @@ public abstract class Player {
         Gender = gender;
         
         if(gender == Gender.MALE)
-            AttackBonus = 5;
+           Weapon = new BareHands(5);
     }
     
     // attributes
@@ -20,7 +20,6 @@ public abstract class Player {
     protected double Intelligence;
     protected double Wisdom;
     protected double Charisma;
-    private double AttackBonus;
     public DamageType ResistantTo;
     public DamageType WeakTo;
     protected double XP = 0;
@@ -28,7 +27,7 @@ public abstract class Player {
     
     protected double Money = 0;
     protected ArrayList<Item> Inventory = new ArrayList();
-    protected Weapon Weapon = new BareHands(AttackBonus);
+    protected Weapon Weapon = new BareHands();
     
     public void attack(Destructible destructible) {
         Weapon.attack(destructible);
@@ -45,40 +44,44 @@ public abstract class Player {
     public void TakeDamage(double damage, DamageType type) {
         switch (type) {
             case FIRE:
-                if(ResistantTo == DamageType.FIRE) HealthPoints -= (damage - 2);
-                if(WeakTo == DamageType.FIRE) HealthPoints -= (damage + 2);
+                if(ResistantTo == DamageType.FIRE) HealthPoints -= (damage - (damage / 10));
+                else if(WeakTo == DamageType.FIRE) HealthPoints -= (damage + (damage / 10));
+                else HealthPoints -= damage;
                 if(HealthPoints > 0)
                     System.out.println(ConsoleColors.RED_BACKGROUND_BRIGHT+ "Vous perdez de la vie: "+ HealthPoints +"/100" + ConsoleColors.RESET);
                 if(HealthPoints <= 0)
                     System.out.println(ConsoleColors.RED_BACKGROUND_BRIGHT+ "Vous êtes mort(e)" +ConsoleColors.RESET); 
             break;
             case NEUTRAL:
-                if(ResistantTo == DamageType.NEUTRAL) HealthPoints -= (damage - 2);
-                if(WeakTo == DamageType.NEUTRAL) HealthPoints -= (damage + 2);
+                if(ResistantTo == DamageType.NEUTRAL) HealthPoints -= (damage - (damage / 10));
+                else if(WeakTo == DamageType.NEUTRAL) HealthPoints -= (damage + (damage / 10));
+                else HealthPoints -= damage;
                 if(HealthPoints > 0)
                     System.out.println(ConsoleColors.RED_BACKGROUND_BRIGHT+ "Vous perdez de la vie: "+ HealthPoints +"/100" + ConsoleColors.RESET);
                 if(HealthPoints <= 0)
                     System.out.println(ConsoleColors.RED_BACKGROUND_BRIGHT+ "Vous êtes mort(e)" +ConsoleColors.RESET); 
             break;
             case POISON:
-                if(ResistantTo == DamageType.POISON) HealthPoints -= (damage - 2);
-                if(WeakTo == DamageType.POISON) HealthPoints -= (damage + 2);
+                if(ResistantTo == DamageType.POISON) HealthPoints -= (damage - (damage / 10));
+                else if(WeakTo == DamageType.POISON) HealthPoints -= (damage + (damage / 10));
+                else HealthPoints -= damage;
                 if(HealthPoints > 0)
                     System.out.println(ConsoleColors.RED_BACKGROUND_BRIGHT+ "Vous perdez de la vie: "+ HealthPoints +"/100" + ConsoleColors.RESET);
                 if(HealthPoints <= 0)
                     System.out.println(ConsoleColors.RED_BACKGROUND_BRIGHT+ "Vous êtes mort(e)" +ConsoleColors.RESET); 
             break;
             case HEMORRAGY:
-                if(ResistantTo == DamageType.HEMORRAGY) HealthPoints -= (damage - 2);
-                if(WeakTo == DamageType.HEMORRAGY) HealthPoints -= (damage + 2);
+                if(ResistantTo == DamageType.HEMORRAGY) HealthPoints -= (damage - (damage / 10));
+                else if(WeakTo == DamageType.HEMORRAGY) HealthPoints -= (damage + (damage / 10));
+                else HealthPoints -= damage;
                 if(HealthPoints > 0)
                     System.out.println(ConsoleColors.RED_BACKGROUND_BRIGHT+ "Vous perdez de la vie: "+ HealthPoints +"/100" + ConsoleColors.RESET);
                 if(HealthPoints <= 0)
                     System.out.println(ConsoleColors.RED_BACKGROUND_BRIGHT+ "Vous êtes mort(e)" +ConsoleColors.RESET); 
             break;
         }
-        
     }
+    
     public void Heal(double points) { HealthPoints += points; }
     
     public void Eat() { 
@@ -115,10 +118,12 @@ public abstract class Player {
         if (item instanceof Weapon) System.out.println(((Weapon) item).ascii_art());
         System.out.println(ConsoleColors.GREEN_BACKGROUND + item.Name + " a été ajouté(e) à votre inventaire." + ConsoleColors.RESET);
     }
+    
     public void ReceiveMoney(double amount) { 
         Money += amount; 
         System.out.println(ConsoleColors.GREEN_BACKGROUND + "Vous avez reçu "+ amount+ "€" + ConsoleColors.RESET);
     };
+    
     public void ChangeWeapon() {
         Scanner in = new Scanner(System.in);
         System.out.println("Souhaitez vous changer d'arme ?");
@@ -142,16 +147,19 @@ public abstract class Player {
         if (Inventory.contains(newWeapon) || (newWeapon.toString() == new BareHands().toString()))
             Weapon = (Weapon) newWeapon;
     }
+    
     public void gainXP(double xp) { 
         if (XP < 100) XP += xp; 
         if (XP >= 100) levelUp(XP-100);
     }
+    
     public void levelUp(double newXP) {
         if(HealthPoints <= 0) return;
         Level ++;
         System.out.println(ConsoleColors.BLUE_BOLD + "Vous venez de passer de passer au niveau " + Level + ConsoleColors.RESET);
         XP = newXP;
         ReceiveMoney(10);
-        if(HealthPoints < 100) Heal(30);
+        if(HealthPoints <= 50) Heal(30);
+        else HealthPoints = 100;
     }
 }
