@@ -71,7 +71,7 @@ Depending on the choice you make the game might be easier or harder.
         WeakTo = DamageType.POISON;
 
 ## Advice 
-- You will earn XP by destructing obstables and killing monsters (enemies). Of course, enemies will give you more XP.
+- You will earn XP by destructing obstacles and killing monsters (enemies). Of course, enemies will give you more XP.
 - If you earned enough XP, you will level up and get some health back as well as some money.
 - Be careful, if you are on the edge of the map, running away is not always an option.
 - When you defeat an enemy or destroy an obstacle, you will receive some items. You can use them as weapons or sell them to the nearest seller.
