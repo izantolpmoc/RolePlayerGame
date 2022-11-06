@@ -1,4 +1,4 @@
-# PARIS SURVIVAL
+# PARIS SURVIVAL (PEGI 18)
 
 This game takes place in a dystopian Paris during a strike. All reasonable people seem to have left the city.
 You wake up in the middle of the street without a penny in your pocket and you will have to find your way back to safety.
